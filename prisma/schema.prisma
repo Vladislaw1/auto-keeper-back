@@ -1,0 +1,121 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum FuelType {
+  PETROL
+  DIESEL
+  HYBRID
+  ELECTRIC
+  GAS
+}
+
+enum Transmission {
+  MANUAL
+  AUTOMATIC
+}
+
+enum WorkCategory {
+  ENGINE
+  TRANSMISSION
+  BRAKES
+  SUSPENSION
+  STEERING
+  ELECTRICAL
+  COOLING
+  FUEL_SYSTEM
+  EXHAUST
+  TIRES
+  BODY
+  INTERIOR
+  AC_CLIMATE
+  DIAGNOSTICS
+  OTHER
+}
+
+model Car {
+  id String @id @default(uuid())
+
+  brand        String
+  model        String
+  year         Int
+  color        String?
+  mileage      Int           @default(0)
+  fuelType     FuelType
+  transmission Transmission?
+  engineCode   String?
+  engineVolume Float
+  vin          String?       @unique
+  carNumber    String        @unique
+
+  owner   Owner      @relation(fields: [ownerId], references: [id])
+  ownerId String     @map("owner_id")
+  photos  CarPhoto[]
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  serviceVisits ServiceVisit[]
+
+  @@index([ownerId])
+  @@map("cars")
+}
+
+model CarPhoto {
+  id       String  @id @default(uuid())
+  url      String
+  publicId String
+  isMain   Boolean @default(false)
+  car      Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId    String  @map("car_id")
+
+  @@index([carId])
+  @@map("car_photos")
+}
+
+model Owner {
+  id String @id @default(uuid())
+
+  first_name String
+  last_name  String
+  cars       Car[]
+
+  @@map("owners")
+}
+
+model ServiceVisit {
+  id        String        @id @default(uuid())
+  car       Car           @relation(fields: [carId], references: [id])
+  carId     String
+  date      DateTime
+  mileage   Int
+  totalCost Decimal?
+  notes     String?
+  items     ServiceItem[]
+  createAt  DateTime      @default(now())
+}
+
+model ServiceItem {
+  id         String       @id @default(uuid())
+  visit      ServiceVisit @relation(fields: [visitId], references: [id])
+  visitId    String
+  workType   WorkType     @relation(fields: [workTypeId], references: [id])
+  workTypeId String
+  price      Decimal?
+  note       String?
+
+  @@unique([visitId, workTypeId]) // щоб не дублювати один тип робіт в одному візиті
+}
+
+model WorkType {
+  id       String        @id @default(uuid())
+  name     String        @unique
+  category WorkCategory
+  isActive Boolean       @default(true)
+  items    ServiceItem[]
+}
