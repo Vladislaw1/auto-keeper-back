@@ -26,6 +26,7 @@ export class CreateServiceItemDto {
     @IsString()
     note?: string;
 }
+
 export class CreateServiceVisitDto {
     @IsUUID()
     carId!: string;
