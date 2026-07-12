@@ -1,44 +1,52 @@
 import { Injectable } from '@nestjs/common';
-import {PrismaService} from "../../prisma/prisma.service";
+import { PrismaService } from '../../prisma/prisma.service';
+import { CreateOwnerDto } from './dto/create-owner.dto';
+import { UpdateOwnerDto } from './dto/update-owner.dto';
+import {
+    ownerListSelect,
+    OwnerListItem,
+    ownerWithCarsSelect,
+    OwnerWithCars,
+} from './owners.select';
 
 @Injectable()
 export class OwnersService {
-
     constructor(private prisma: PrismaService) {}
 
-    getOwner(id: string){
-        return this.prisma.owner.findUnique({
-            where:{id},
-            select: {
-                id: true,
-                first_name: true,
-                last_name: true,
-                cars: {
-                    select: {
-                        id: true,
-                        brand: true,
-                        model: true,
-                        year: true,
-                        color: true,
-                        mileage: true,
-                        fuelType: true,
-                        transmission: true,
-                        engineCode: true,
-                        engineVolume: true,
-                        vin: true,
-                        carNumber: true,
-                    },
-                },
-            },
+    getOwners(): Promise<OwnerListItem[]> {
+        return this.prisma.owner.findMany({
+            select: ownerListSelect,
+            orderBy: [{ last_name: 'asc' }, { first_name: 'asc' }],
         });
     }
 
-    createOwner(first_name: string,last_name: string){
+    getOwner(id: string): Promise<OwnerWithCars | null> {
+        return this.prisma.owner.findUnique({
+            where: { id },
+            select: ownerWithCarsSelect,
+        });
+    }
+
+    createOwner(dto: CreateOwnerDto): Promise<OwnerListItem> {
         return this.prisma.owner.create({
             data: {
-                first_name: first_name,
-                last_name: last_name,
-            }
+                first_name: dto.first_name,
+                last_name: dto.last_name,
+            },
+            select: ownerListSelect,
         });
+    }
+
+    updateOwner(id: string, dto: UpdateOwnerDto): Promise<OwnerListItem> {
+        return this.prisma.owner.update({
+            where: { id },
+            data: dto,
+            select: ownerListSelect,
+        });
+    }
+
+    async deleteOwner(id: string) {
+        await this.prisma.owner.delete({ where: { id } });
+        return { deleted: true };
     }
 }

@@ -1,15 +1,10 @@
- import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
- import {PrismaService} from "../prisma/prisma.service";
- import {ConfigModule} from "@nestjs/config";
+import { ConfigModule } from '@nestjs/config';
 import { CarsModule } from './cars/cars.module';
 import { OwnersModule } from './owners/owners.module';
- import {CarsService} from "./cars/cars.service";
- import {OwnersService} from "./owners/owners.service";
- import {CarsController} from "./cars/cars.controller";
- import {OwnersController} from "./owners/owners.controller";
- import {PrismaModule} from "../prisma/prisma.module";
+import { PrismaModule } from '../prisma/prisma.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ServiceVisitModule } from './service-visit/service-visit.module';
 import { CarCatalogModule } from './car-catalog/car-catalog.module';
@@ -26,7 +21,7 @@ import { CarCatalogModule } from './car-catalog/car-catalog.module';
       ServiceVisitModule,
       CarCatalogModule,
   ],
-  controllers: [AppController,CarsController,OwnersController],
-  providers: [AppService,CarsService,OwnersService,PrismaService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
