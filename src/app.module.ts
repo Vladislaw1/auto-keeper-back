@@ -12,6 +12,7 @@ import { OwnersModule } from './owners/owners.module';
  import {PrismaModule} from "../prisma/prisma.module";
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ServiceVisitModule } from './service-visit/service-visit.module';
+import { CarCatalogModule } from './car-catalog/car-catalog.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ServiceVisitModule } from './service-visit/service-visit.module';
       OwnersModule,
       CloudinaryModule,
       ServiceVisitModule,
+      CarCatalogModule,
   ],
   controllers: [AppController,CarsController,OwnersController],
   providers: [AppService,CarsService,OwnersService,PrismaService],

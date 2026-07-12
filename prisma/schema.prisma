@@ -119,3 +119,22 @@ model WorkType {
   isActive Boolean       @default(true)
   items    ServiceItem[]
 }
+
+model CarBrand {
+  id     String     @id @default(uuid())
+  name   String     @unique
+  models CarModel[]
+
+  @@map("car_brands")
+}
+
+model CarModel {
+  id      String   @id @default(uuid())
+  name    String
+  brand   CarBrand @relation(fields: [brandId], references: [id])
+  brandId String   @map("brand_id")
+
+  @@unique([brandId, name])
+  @@index([brandId])
+  @@map("car_models")
+}
