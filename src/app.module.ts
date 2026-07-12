@@ -8,6 +8,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ServiceVisitModule } from './service-visit/service-visit.module';
 import { CarCatalogModule } from './car-catalog/car-catalog.module';
+import { WorkTypesModule } from './work-types/work-types.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CarCatalogModule } from './car-catalog/car-catalog.module';
       CloudinaryModule,
       ServiceVisitModule,
       CarCatalogModule,
+      WorkTypesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
