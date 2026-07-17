@@ -41,7 +41,7 @@ export class CarsController {
     return this.carsService.updateCar(id, dto)
   }
 
-  @Delete('/:id')
+  @Delete('remove/:id')
   deleteCar(@Param('id') id: string){
     return this.carsService.deleteCar(id)
   }

@@ -15,7 +15,7 @@ export class OwnersService {
 
     getOwners(): Promise<OwnerListItem[]> {
         return this.prisma.owner.findMany({
-            select: ownerListSelect,
+            select: ownerWithCarsSelect,
             orderBy: [{ last_name: 'asc' }, { first_name: 'asc' }],
         });
     }

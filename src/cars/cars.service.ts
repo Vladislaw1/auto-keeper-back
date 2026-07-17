@@ -58,10 +58,23 @@ export class CarsService {
             where: { id },
             include: { photos: true },
         });
-        for (const photo of car?.photos ?? []) {
+        if (!car) throw new NotFoundException('Car not found');
+
+        for (const photo of car.photos) {
             await this.cloudinaryService.deleteImage(photo.publicId);
         }
-        return this.prisma.car.delete({ where: { id } });
+
+        await this.prisma.$transaction(async (tx) => {
+            await tx.serviceItem.deleteMany({
+                where: { visit: { carId: id } },
+            });
+            await tx.serviceVisit.deleteMany({
+                where: { carId: id },
+            });
+            await tx.car.delete({ where: { id } });
+        });
+
+        return car;
     }
 
     async uploadPhoto(carId: string, file: Express.Multer.File) {
