@@ -1,11 +1,13 @@
 generator client {
-  provider     = "prisma-client"
-  output       = "../generated/prisma"
-  moduleFormat = "cjs"
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  moduleFormat    = "cjs"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [postgis]
 }
 
 enum FuelType {
@@ -137,4 +139,44 @@ model CarModel {
   @@unique([brandId, name])
   @@index([brandId])
   @@map("car_models")
+}
+
+enum PlaceCategory {
+  CAR_REPAIR
+  TYRES
+  CAR_WASH
+  CAR_PARTS
+}
+
+model Place {
+  id          String                            @id
+  category    PlaceCategory
+  lat         Float
+  lon         Float
+  name        String?
+  phone       String?
+  hours       String?
+  website     String?
+  address     String?
+  tags        Json?
+  ratingAvg   Float                             @default(0)
+  ratingCount Int                               @default(0)
+  location    Unsupported("geography(Point,4326)")?
+  reviews     Review[]
+
+  @@index([category])
+  @@index([lat, lon])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  placeId   String
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  userId    String
+  rating    Int
+  text      String?
+  createdAt DateTime @default(now())
+
+  @@unique([placeId, userId])
+  @@index([placeId])
 }

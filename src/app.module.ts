@@ -4,11 +4,12 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { CarsModule } from './cars/cars.module';
 import { OwnersModule } from './owners/owners.module';
-import { PrismaModule } from '../prisma/prisma.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ServiceVisitModule } from './service-visit/service-visit.module';
 import { CarCatalogModule } from './car-catalog/car-catalog.module';
 import { WorkTypesModule } from './work-types/work-types.module';
+import { PlaceModule } from './place/place.module';
+import {PrismaModule} from "../prisma/prisma.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { WorkTypesModule } from './work-types/work-types.module';
       ServiceVisitModule,
       CarCatalogModule,
       WorkTypesModule,
+      PlaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
