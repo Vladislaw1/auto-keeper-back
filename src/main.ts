@@ -7,7 +7,10 @@ import {ValidationPipe} from "@nestjs/common";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors({ origin: 'https://auto-keeper-production.up.railway.app/' });
+  app.enableCors({ origin: [
+      'https://auto-keeper-production.up.railway.app',
+      'http://localhost:5173',
+    ], });
   app.useGlobalPipes(new ValidationPipe({whitelist: true, transform: true,transformOptions: { enableImplicitConversion: true },}))
   await app.listen(process.env.PORT ?? 3000);
 }
